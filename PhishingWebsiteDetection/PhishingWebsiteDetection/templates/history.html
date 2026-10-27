@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Detection History - PhishGuard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛡️ PhishGuard
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/#detector">
+            Detector
+        </a>
+
+        <a href="/history">
+            History
+        </a>
+
+        <a href="/#about">
+            About
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= HISTORY ================= -->
+
+<section class="history-page">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            SECURITY RECORDS
+        </span>
+
+        <h1>
+            Detection History
+        </h1>
+
+        <p>
+            View all website URLs analyzed by the
+            Phishing Website Detection System.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= ACTIONS ================= -->
+
+    <div class="history-actions">
+
+        <a href="/"
+           class="back-button">
+
+            ← Back to Dashboard
+
+        </a>
+
+
+        {% if checks %}
+
+        <form action="/clear-history"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete all detection history?');">
+
+            <button type="submit"
+                    class="clear-button">
+
+                🗑️ Clear History
+
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ================= TABLE ================= -->
+
+    {% if checks %}
+
+    <div class="history-table-container">
+
+        <table class="history-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Website URL
+                    </th>
+
+                    <th>
+                        Risk Score
+                    </th>
+
+                    <th>
+                        Risk Level
+                    </th>
+
+                    <th>
+                        Detection Details
+                    </th>
+
+                    <th>
+                        Date & Time
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for check in checks %}
+
+                <tr>
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+
+                    <td class="history-url">
+
+                        🌐
+
+                        {{ check["url"] }}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ check["score"] }}/10
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if check["risk"] == "High" %}
+
+                        <span class="history-risk high-risk">
+
+                            🔴 High Risk
+
+                        </span>
+
+                        {% elif check["risk"] == "Medium" %}
+
+                        <span class="history-risk medium-risk">
+
+                            🟠 Medium Risk
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="history-risk low-risk">
+
+                            🟢 Low Risk
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td class="history-reasons">
+
+                        {% if check["reasons"] %}
+
+                            {{ check["reasons"] }}
+
+                        {% else %}
+
+                            ✓ No major suspicious signs detected.
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ check["checked_at"] }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- ================= EMPTY HISTORY ================= -->
+
+    <div class="empty-history-page">
+
+        <div class="empty-icon">
+            📭
+        </div>
+
+        <h2>
+            No Detection History
+        </h2>
+
+        <p>
+            You haven't checked any website URLs yet.
+        </p>
+
+        <a href="/#detector"
+           class="hero-button">
+
+            🔍 Check a Website
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h3>
+        🛡️ PhishGuard
+    </h3>
+
+    <p>
+        Phishing Website Detection System
+    </p>
+
+    <p>
+        TYCS Mini Project • Educational Purpose
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

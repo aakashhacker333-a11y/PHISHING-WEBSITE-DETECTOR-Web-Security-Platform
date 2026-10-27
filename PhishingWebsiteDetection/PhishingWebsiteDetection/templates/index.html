@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Phishing Website Detection</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛡️ PhishGuard
+    </div>
+
+    <div class="nav-links">
+
+        <a href="#home">Home</a>
+
+        <a href="#detector">Detector</a>
+
+        <a href="#about">About</a>
+
+        <a href="#how-it-works">How It Works</a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= HERO / HOME ================= -->
+
+<section id="home" class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-text">
+
+            <span class="badge">
+                🛡️ CYBERSECURITY MINI PROJECT
+            </span>
+
+            <h1>
+                Phishing Website
+                <span>Detection System</span>
+            </h1>
+
+            <p>
+                Detect suspicious website URLs using multiple
+                security-based URL analysis techniques.
+            </p>
+
+            <a href="#detector" class="hero-button">
+                🔍 Check a Website
+            </a>
+
+        </div>
+
+
+        <div class="hero-icon">
+            🛡️
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= PROJECT STATS ================= -->
+
+<section class="stats-section">
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🔎
+        </div>
+
+        <h3>URL Analysis</h3>
+
+        <p>
+            Analyze website URLs for suspicious characteristics.
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            ⚠️
+        </div>
+
+        <h3>Risk Detection</h3>
+
+        <p>
+            Calculate a risk score based on detected indicators.
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🛡️
+        </div>
+
+        <h3>Security Awareness</h3>
+
+        <p>
+            Help users identify potentially dangerous URLs.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section class="dashboard-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            SECURITY DASHBOARD
+        </span>
+
+        <h2>
+            Detection Overview
+        </h2>
+
+        <p>
+            Overview of the URLs analyzed during this session.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-stats">
+
+
+        <!-- TOTAL -->
+
+        <div class="dashboard-card total-card">
+
+            <div class="dashboard-icon">
+                🔎
+            </div>
+
+            <div>
+
+                <h3>
+                    {{ total_checks }}
+                </h3>
+
+                <p>
+                    Total Checks
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- HIGH -->
+
+        <div class="dashboard-card high-card">
+
+            <div class="dashboard-icon">
+                🔴
+            </div>
+
+            <div>
+
+                <h3>
+                    {{ high_risk_count }}
+                </h3>
+
+                <p>
+                    High Risk
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDIUM -->
+
+        <div class="dashboard-card medium-card">
+
+            <div class="dashboard-icon">
+                🟠
+            </div>
+
+            <div>
+
+                <h3>
+                    {{ medium_risk_count }}
+                </h3>
+
+                <p>
+                    Medium Risk
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOW -->
+
+        <div class="dashboard-card low-card">
+
+            <div class="dashboard-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <h3>
+                    {{ low_risk_count }}
+                </h3>
+
+                <p>
+                    Low Risk
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- RECENT CHECKS -->
+
+    <div class="recent-section">
+
+        <div class="recent-header">
+
+            <h3>
+                🕘 Recent Checks
+            </h3>
+
+            <div>
+
+                <span>
+                    Latest 5
+                </span>
+
+                <a href="/history"
+                   class="history-link">
+
+                    View Full History →
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% if recent_checks %}
+
+        <div class="recent-list">
+
+            {% for check in recent_checks %}
+
+            <div class="recent-item">
+
+                <div class="recent-url">
+
+                    🌐
+
+                    <span>
+                        {{ check.url }}
+                    </span>
+
+                </div>
+
+
+                <div class="recent-score">
+
+                    <strong>
+                        {{ check.score }}/10
+                    </strong>
+
+
+                    {% if check.risk == "High" %}
+
+                        <span class="recent-risk high-risk">
+                            High Risk
+                        </span>
+
+                    {% elif check.risk == "Medium" %}
+
+                        <span class="recent-risk medium-risk">
+                            Medium Risk
+                        </span>
+
+                    {% else %}
+
+                        <span class="recent-risk low-risk">
+                            Low Risk
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-history">
+
+            🔍 No websites have been checked yet.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= DETECTOR ================= -->
+
+<section id="detector" class="detector-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            WEBSITE SECURITY CHECK
+        </span>
+
+        <h2>
+            Check a Website URL
+        </h2>
+
+        <p>
+            Enter a website address below to analyze
+            its phishing risk.
+        </p>
+
+    </div>
+
+
+    <div class="search-card">
+
+        <form action="/check" method="POST">
+
+            <input
+                type="text"
+                name="url"
+                placeholder="Example: https://example.com"
+                value="{{ url if url else '' }}"
+                required
+            >
+
+            <button type="submit">
+                🔍 Check Website
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ================= RESULT ================= -->
+
+    {% if status %}
+
+    <div class="result-card">
+
+
+        <!-- ================= LEFT SIDE ================= -->
+
+        <div class="risk-section">
+
+
+            <!-- RISK BOX -->
+
+            <div class="risk-box
+
+                {% if score >= 5 %}
+                    high
+                {% elif score >= 2 %}
+                    medium
+                {% else %}
+                    low
+                {% endif %}">
+
+
+                <div class="risk-icon">
+
+                    {% if score >= 5 %}
+
+                        ⚠️
+
+                    {% elif score >= 2 %}
+
+                        ⚠️
+
+                    {% else %}
+
+                        ✓
+
+                    {% endif %}
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+
+                        {% if score >= 5 %}
+
+                            High Risk
+
+                        {% elif score >= 2 %}
+
+                            Medium Risk
+
+                        {% else %}
+
+                            Low Risk
+
+                        {% endif %}
+
+                    </h2>
+
+                    <p>
+                        {{ status }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SCORE -->
+
+            <div class="score-circle
+
+                {% if score >= 5 %}
+                    high-circle
+                {% elif score >= 2 %}
+                    medium-circle
+                {% else %}
+                    low-circle
+                {% endif %}">
+
+
+                <div class="score-number">
+
+                    {{ score }}
+
+                    <span>/10</span>
+
+                </div>
+
+
+                <div class="score-text">
+                    Risk Score
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= RISK SCALE ================= -->
+
+            <div class="risk-scale">
+
+
+                <div class="score-meter">
+
+                    <div
+                        class="score-fill
+
+                        {% if score >= 5 %}
+                            score-high
+
+                        {% elif score >= 2 %}
+                            score-medium
+
+                        {% else %}
+                            score-low
+
+                        {% endif %}"
+
+                        style="width: {{ (score / 10) * 100 }}%;">
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="scale-labels">
+
+                    <span class="low-text">
+
+                        Low<br>
+
+                        <small>
+                            0–1
+                        </small>
+
+                    </span>
+
+
+                    <span class="medium-text">
+
+                        Medium<br>
+
+                        <small>
+                            2–4
+                        </small>
+
+                    </span>
+
+
+                    <span class="high-text">
+
+                        High<br>
+
+                        <small>
+                            5+
+                        </small>
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- RISK STATUS -->
+
+                <div class="risk-status">
+
+
+                    {% if score >= 5 %}
+
+                        <span class="risk-status-icon">
+                            🔴
+                        </span>
+
+                        <strong>
+                            HIGH RISK
+                        </strong>
+
+                        <p>
+                            Possible phishing website detected
+                        </p>
+
+
+                    {% elif score >= 2 %}
+
+                        <span class="risk-status-icon">
+                            🟠
+                        </span>
+
+                        <strong>
+                            MEDIUM RISK
+                        </strong>
+
+                        <p>
+                            Suspicious website characteristics detected
+                        </p>
+
+
+                    {% else %}
+
+                        <span class="risk-status-icon">
+                            🟢
+                        </span>
+
+                        <strong>
+                            LOW RISK
+                        </strong>
+
+                        <p>
+                            No major suspicious signs detected
+                        </p>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= RIGHT SIDE ================= -->
+
+        <div class="details-section">
+
+
+            <!-- URL -->
+
+            <div class="url-box">
+
+                <div class="detail-icon">
+                    🌐
+                </div>
+
+                <div>
+
+                    <strong>
+                        Website URL
+                    </strong>
+
+                    <p>
+                        {{ url }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= DETECTION DETAILS ================= -->
+
+            <div class="details-box">
+
+                <h3>
+                    ⚠️ Detection Details
+                </h3>
+
+
+                {% if reasons %}
+
+
+                    {% for reason in reasons %}
+
+                    <div class="reason">
+
+                        <span class="reason-icon">
+                            ⚠️
+                        </span>
+
+                        <span>
+                            {{ reason }}
+                        </span>
+
+                        <span class="detected">
+                            Detected
+                        </span>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="safe-result">
+
+                        ✓ No major suspicious signs detected.
+
+                    </div>
+
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ================= SECURITY ANALYSIS ================= -->
+
+            {% if checks %}
+
+            <div class="security-analysis">
+
+
+                <div class="security-analysis-header">
+
+                    <h3>
+                        🔬 Security Analysis
+                    </h3>
+
+                    <p>
+                        Individual security checks performed on this URL.
+                    </p>
+
+                </div>
+
+
+
+                <div class="security-check-list">
+
+
+                    {% for check in checks %}
+
+                    <div class="security-check
+
+                        {% if check.status == 'danger' %}
+
+                            check-danger
+
+                        {% elif check.status == 'warning' %}
+
+                            check-warning
+
+                        {% else %}
+
+                            check-safe
+
+                        {% endif %}">
+
+
+                        <div class="check-status">
+
+
+                            {% if check.status == 'danger' %}
+
+                                ✕
+
+
+                            {% elif check.status == 'warning' %}
+
+                                !
+
+
+                            {% else %}
+
+                                ✓
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <div class="check-content">
+
+                            <strong>
+                                {{ check.name }}
+                            </strong>
+
+                            <span>
+                                {{ check.message }}
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="check-label">
+
+
+                            {% if check.status == 'danger' %}
+
+                                Detected
+
+
+                            {% elif check.status == 'warning' %}
+
+                                Warning
+
+
+                            {% else %}
+
+                                Passed
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- ================= ADDITIONAL INFORMATION ================= -->
+
+            <div class="info-box">
+
+                <h3>
+                    ℹ️ Additional Information
+                </h3>
+
+
+                <div class="info-row">
+
+                    <span>
+                        URL Length
+                    </span>
+
+                    <span>
+                        {{ url|length }} characters
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        HTTPS
+                    </span>
+
+                    <span>
+
+
+                        {% if url.lower().startswith('https://') %}
+
+                            ✓ Secure
+
+                        {% else %}
+
+                            ⚠ Not Secure
+
+                        {% endif %}
+
+
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Analysis Type
+                    </span>
+
+                    <span>
+                        Rule-Based Analysis
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="about-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            ABOUT THE PROJECT
+        </span>
+
+        <h2>
+            What is Phishing Website Detection?
+        </h2>
+
+    </div>
+
+
+    <div class="about-grid">
+
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                🎯
+            </div>
+
+            <h3>
+                Project Objective
+            </h3>
+
+            <p>
+                The main objective of this project is to identify
+                suspicious website URLs that may be associated with
+                phishing attacks. The system analyzes different
+                characteristics of a URL and calculates a risk score.
+            </p>
+
+        </div>
+
+
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                🧠
+            </div>
+
+            <h3>
+                Why Phishing Detection?
+            </h3>
+
+            <p>
+                Phishing websites are designed to trick users into
+                revealing sensitive information such as usernames,
+                passwords and financial details. Detecting suspicious
+                URLs can help users avoid potentially harmful websites.
+            </p>
+
+        </div>
+
+
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                💻
+            </div>
+
+            <h3>
+                Technology Used
+            </h3>
+
+            <p>
+                This project uses Python and Flask for the backend,
+                HTML and CSS for the user interface, and rule-based
+                URL analysis techniques for phishing detection.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section id="how-it-works" class="how-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            SYSTEM PROCESS
+        </span>
+
+        <h2>
+            How It Works
+        </h2>
+
+        <p>
+            The system follows a simple step-by-step URL analysis process.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                01
+            </div>
+
+            <div>
+
+                <h3>
+                    Enter URL
+                </h3>
+
+                <p>
+                    The user enters the website URL that they
+                    want to check.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                02
+            </div>
+
+            <div>
+
+                <h3>
+                    Analyze URL
+                </h3>
+
+                <p>
+                    The system checks the URL for suspicious
+                    characteristics and security indicators.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                03
+            </div>
+
+            <div>
+
+                <h3>
+                    Calculate Risk
+                </h3>
+
+                <p>
+                    Suspicious characteristics increase the
+                    overall risk score.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                04
+            </div>
+
+            <div>
+
+                <h3>
+                    Display Result
+                </h3>
+
+                <p>
+                    The system displays Low, Medium or High
+                    risk along with the reasons.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= DETECTION FEATURES ================= -->
+
+<section class="features-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            DETECTION FEATURES
+        </span>
+
+        <h2>
+            What Does The System Check?
+        </h2>
+
+    </div>
+
+
+    <div class="features-grid">
+
+
+        <div class="feature">
+
+            <span>🌐</span>
+
+            <h3>
+                IP Address
+            </h3>
+
+            <p>
+                Detects URLs using an IP address instead of
+                a normal domain name.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature">
+
+            <span>🔒</span>
+
+            <h3>
+                HTTPS
+            </h3>
+
+            <p>
+                Checks whether the website uses a secure HTTPS
+                connection.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature">
+
+            <span>🔑</span>
+
+            <h3>
+                Suspicious Words
+            </h3>
+
+            <p>
+                Looks for words such as login, verify,
+                account and password.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature">
+
+            <span>🔗</span>
+
+            <h3>
+                URL Structure
+            </h3>
+
+            <p>
+                Checks URL length, subdomains and suspicious
+                symbols.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature">
+
+            <span>📎</span>
+
+            <h3>
+                URL Shorteners
+            </h3>
+
+            <p>
+                Detects commonly used URL shortening services.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature">
+
+            <span>📊</span>
+
+            <h3>
+                Risk Score
+            </h3>
+
+            <p>
+                Combines detected indicators into an overall
+                risk score.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= RISK LEVELS ================= -->
+
+<section class="risk-level-section">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            RISK CLASSIFICATION
+        </span>
+
+        <h2>
+            Understanding Risk Levels
+        </h2>
+
+    </div>
+
+
+    <div class="risk-levels">
+
+
+        <div class="level low-level">
+
+            <div class="level-icon">
+                ✓
+            </div>
+
+            <h3>
+                Low Risk
+            </h3>
+
+            <p>
+                Score: 0–1
+            </p>
+
+            <span>
+                No major suspicious indicators detected.
+            </span>
+
+        </div>
+
+
+
+        <div class="level medium-level">
+
+            <div class="level-icon">
+                !
+            </div>
+
+            <h3>
+                Medium Risk
+            </h3>
+
+            <p>
+                Score: 2–4
+            </p>
+
+            <span>
+                Some suspicious characteristics were detected.
+            </span>
+
+        </div>
+
+
+
+        <div class="level high-level">
+
+            <div class="level-icon">
+                !
+            </div>
+
+            <h3>
+                High Risk
+            </h3>
+
+            <p>
+                Score: 5+
+            </p>
+
+            <span>
+                Multiple suspicious indicators were detected.
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h3>
+        🛡️ PhishGuard
+    </h3>
+
+    <p>
+        Phishing Website Detection System
+    </p>
+
+    <p>
+        TYCS Mini Project • Educational Purpose
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
